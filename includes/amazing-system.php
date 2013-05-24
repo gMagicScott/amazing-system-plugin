@@ -17,11 +17,11 @@ class MagicAmazingSystemPlugin {
 	public static function save_request_vars() {
 		if ( isset($_GET) ) {
 			$get = $_GET;
-			array_merge( self::$request, $get );
+			self::$request = array_merge( self::$request, $get );
 		}
 		if ( isset($_POST) ) {
 			$post = $_POST;
-			array_merge( self::$request, $post );
+			self::$request = array_merge( self::$request, $post );
 		}
 	}
 
@@ -32,6 +32,8 @@ class MagicAmazingSystemPlugin {
 		$shortcode = get_option(self::option_key, self::default_shortcode_name);
 		add_shortcode ( $shortcode, 'MagicAmazingSystemPlugin::display_get_post_vars' );
 		add_shortcode ( 'gender', 'MagicAmazingSystemPlugin::as_shortcode_gender_cb' );
+		add_shortcode ( 'show_as_form', 'MagicAmazingSystemPlugin::show_as_form_cb' );
+		add_shortcode ( 'textarea', 'MagicAmazingSystemPlugin::textarea_cb');
 		}
 
 		/**
@@ -50,24 +52,28 @@ class MagicAmazingSystemPlugin {
 			/*if ( !isset( $_REQUEST['Name'] ) && isset( $_SESSION['Name'] ) ) {
 				$_REQUEST['Name'] = $_SESSION['Name'];
 				}*/
+				
+			$request = array();
+			$request = self::$request;
+			
 			if ( $what == 'firstname' ) {
-					if ( isset( $_POST['Name'] )) {
-						list($firstname, $lastname) = explode(' ', $_POST['Name'], 2);
+					if ( isset( $request['Name'] )) {
+						list($firstname, $lastname) = explode(' ', $request['Name'], 2);
 						return trim($firstname);
 					}
-					if ( isset( $_GET['Name'] )) {
+					/*if ( isset( $_GET['Name'] )) {
 						list($firstname, $lastname) = explode(' ', $_GET['Name'], 2);
 						return trim($firstname);
-					}
+					}*/
 			} else if ( $what === 'lastname' ) {
-				list($firstname, $lastname) = explode(' ', self::$request['Name'], 2);
+				list($firstname, $lastname) = explode(' ', $request['Name'], 2);
 				return trim($lastname);
 			}
-			if ( isset( $_POST[$what] )) {
-				$value = $_POST[$what];
-			} else if (isset( $_GET[$what])) {
+			if ( isset( $request[$what] )) {
+				$value = $request[$what];
+			} /*else if (isset( $_GET[$what])) {
 				$value = $_GET[$what];
-			} /*else if (isset( $_SESSION[$what])) {
+			} else if (isset( $_SESSION[$what])) {
 				$value = $_SESSION[$what];
 			} */else {
 				$value = $default;
@@ -87,15 +93,124 @@ class MagicAmazingSystemPlugin {
 		), $atts ) );
 		
 		$r = $boy;
+		$request = array();
+		$request = self::$request;
 		
-		if ( isset( $_REQUEST[$req] ) && 'girl' == $_REQUEST[$req] ) {
+		if ( isset( $request[$req] ) && 'girl' == $request[$req] ) {
 			return $girl;
 		}
-		if ( isset( $_REQUEST[$req] ) && 'multi' == $_REQUEST[$req] ) {
+		if ( isset( $request[$req] ) && 'multi' == $request[$req] ) {
 			return $multi;
 		}
 		
 		return $r;
+	}
+	/**
+	 * Handler for [show_as_form] shortcode.
+	 */
+	public static function show_as_form_cb( $atts, $content = null) {
+		global $post;
+		$as_form_html_value = get_post_meta( $post->ID, '_as_the_form', true);
+		
+		if ( '' == $as_form_html_value ) {
+			return $content;
+		}
+		
+		return do_shortcode( $as_form_html_value );
+	}
+
+	/**
+	 * Handler for [textarea][/textarea] shortcode
+	 *
+	 * When using the standard HTML tag for textareas, the containing
+	 * form get broken out of. This shortcode will create a normal
+	 * textarea tag when viewed in the page output, but stops the problem
+	 * in the admin area.
+	 * 
+	 * @param  array $atts    attributes contained in opening tag
+	 * @param  string $content data contained between open and closed [textarea][/textarea]
+	 * @return string          the html output
+	 */
+	public static function textarea_cb( $atts, $content = '') {
+		$atts = shortcode_atts( array(
+			// textarea specific
+			'autofocus' => '',
+			'cols' => '',
+			'disabled' => '',
+			'form' => '',
+			'maxlength' => '',
+			'name' => '',
+			'placeholder' => '',
+			'readonly' => '',
+			'required' => '',
+			'rows' => '',
+			'wrap' => '',
+			// global attributes
+			'accesskey' => '',
+			'class' => '',
+			'contenteditable' => '',
+			'contextmenu' => '',
+			'dir' => '',
+			'draggable' => '',
+			'dropzone' => '',
+			'hidden' => '',
+			'id' => '',
+			'lang' => '',
+			'spellcheck' => '',
+			'style' => '',
+			'tabindex' => '',
+			'title' => '',
+			// event attributes
+			'onblur' => '',
+			'onchange' => '',
+			'oncontextmenu' => '',
+			'onfocus' => '',
+			'onformchange' => '',
+			'onforminput' => '',
+			'oninput' => '',
+			'oninvalid' => '',
+			'onselect' => '',
+			'onsubmit' => '',
+			'onkeydown' => '',
+			'onkeypress' => '',
+			'onkeyup' => '',
+			'onclick' => '',
+			'ondblclick' => '',
+			'ondrag' => '',
+			'ondragend' => '',
+			'ondragenter' => '',
+			'ondragleave' => '',
+			'ondragover' => '',
+			'ondragstart' => '',
+			'ondrop' => '',
+			'onmousedown' => '',
+			'onmousemove' => '',
+			'onmouseout' => '',
+			'onmouseover' => '',
+			'onmouseup' => '',
+			'onmousewheel' => '',
+			'onscroll' => '',
+		), $atts );
+
+		$atts_string = '';
+
+		if ( !empty($atts) ) {
+
+			foreach ($atts as $k => $v) {
+				$append = '';
+
+				if ( '' != $v ) {
+					$append = ' ' . $k . '="' . esc_attr( $v ) . '"';
+				}
+
+				$atts_string .= $append;
+			} // End foreach
+
+		} // End If
+
+		$return = '<textarea' . $atts_string . '>' . do_shortcode( $content ) . '</textarea>';
+
+		return $return;
 	}
 	
 	// Used to uniquely identify this plugin's menu page in the WP manager
@@ -175,6 +290,7 @@ class MagicAmazingSystemPlugin {
 	public static function add_javascript_to_footer($content) {
 		global $post;
 		$as_extra_js_value = get_post_meta( $post->ID, '_as_extra_js', true);
+		$as_extra_js_value = do_shortcode( $as_extra_js_value );
 
 		if ( '' == $as_extra_js_value ) {
 			return $content;
@@ -198,7 +314,7 @@ EOF;
 	}
 }
 
-add_action('init', 'MagicAmazingSystemPlugin::save_request_vars', 5);
+
 add_filter('the_content', 'MagicAmazingSystemPlugin::stop_html_filter', 9);
 add_filter('the_content', 'MagicAmazingSystemPlugin::add_javascript_to_footer', 9);
 require_once( 'meta-box/example-functions.php' );

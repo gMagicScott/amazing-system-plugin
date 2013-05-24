@@ -14,10 +14,6 @@
 		<?php wp_nonce_field('amazing_system_options_update','amazing_system_admin_nonce'); ?>
 	</form>
 	<h3>The 1ShoppingCart WordPress Hack</h3>
-	<p>To pass form information into your WordPress site from 1ShoppingCart, you will need to use this &quot;hack.&quot;</p>
-	<p>Set the following URL as your thank-you page on your form:</p>
-	<p><code><?php print WP_PLUGIN_URL ?>/amazing-system/post.php</code></p>
-	<p>Put the thank you page you want visitors to see within this next snippit in your form. Replace <em>your-url-here</em> with your thank you page.</p>
-	<p><code>&lt;input type=&quot;hidden&quot; id=&quot;wpsys&quot; name=&quot;wpsys&quot; value=&quot;<em>your-url-here</em>&quot; /&gt;</code></p>
-	<p>A better solution would be native 1ShoppingCart support. I have a idea request in. Please <a href="http://ideas.1shoppingcart.com/forums/20399-big-ideas/suggestions/2787097-send-post-variables-to-wordpress-based-thank-you-p">go here to vote and comment</a>. I'd appreciate it.</p>
+	<p>I have reworked the plugin to no longer need the hack. Set your thank you page to the correct WordPress page.</p>
+	<p>If you were already using the hack, please update your forms. The hack function will eventually be removed from the plugin.</p>
 </div>

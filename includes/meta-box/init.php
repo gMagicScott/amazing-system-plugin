@@ -493,8 +493,8 @@ function cmb_scripts( $hook ) {
   	if ( $hook == 'post.php' || $hook == 'post-new.php' || $hook == 'page-new.php' || $hook == 'page.php' ) {
 		wp_register_script( 'cmb-timepicker', CMB_META_BOX_URL . 'js/jquery.timePicker.min.js' );
 		wp_register_script( 'cmb-scripts', CMB_META_BOX_URL . 'js/cmb.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker', 'media-upload', 'thickbox', 'farbtastic' ) );
-		wp_enqueue_script( 'cmb-timepicker' );
-		wp_enqueue_script( 'cmb-scripts' );
+		// wp_enqueue_script( 'cmb-timepicker' );
+		// wp_enqueue_script( 'cmb-scripts' );
 		wp_register_style( 'cmb-styles', CMB_META_BOX_URL . 'style.css', array( 'thickbox', 'farbtastic' ) );
 		wp_enqueue_style( 'cmb-styles' );
   	}

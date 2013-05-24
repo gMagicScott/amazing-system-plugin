@@ -4,9 +4,11 @@ Plugin Name: Amazing System
 Plugin URI: http://www.amazingsystemtraining.com
 Description: Amazing System 3.0 (That thing from Dave Farr) - now for WordPress
 Author: Scott Lesovic
-Version: 0.1.1
+Version: 0.1.3
 Author URI: http://www.scottlesovic.com
 */
+
+
 include_once('includes/amazing-system.php');
 
 add_action( 'init', 'MagicAmazingSystemPlugin::register_shortcodes' );
@@ -20,23 +22,6 @@ $this_file = __FILE__;
 $update_check = "http://www.guilefulmagic.com/plugins/amazing-system-plugin.chk";
 require_once('gill-updates.php');
 
-//[as what="POST/GET Variable" default="default value"]
-/* I moved this... See above
-function as_func( $atts ) {
-	extract( shortcode_atts( array(
-		'what' => 'name',
-		'default' => '',
-	), $atts ) ) ;
-	if ( isset( $_POST[$what] )) {
-		$value = $_POST[$what];
-	} else if (isset( $_GET[$what])) {
-		$value = $_GET[$what];
-	} else {
-		$value = $default;
-	}
-	return $value;
-}
-add_shortcode( 'as', 'as_func' );
-*/
+
 
 /*EOF*/

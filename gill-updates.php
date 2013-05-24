@@ -59,7 +59,7 @@ function gill_check_update() {
 
 	$response = wp_remote_get( $update_check );
 	list($version, $url) = explode('|', $response['body']);
-	if(gill_plugin_get("Version") == $version) return false;
+	if(gill_plugin_get("Version") >= $version) return false;
 	$plugin_transient = get_site_transient('update_plugins');
 	$a = array(
 		'slug' => $plugin_folder,

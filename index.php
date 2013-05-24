@@ -4,7 +4,7 @@ Plugin Name: Amazing System
 Plugin URI: http://www.amazingsystemtraining.com
 Description: Amazing System 3.0 (That thing from Dave Farr) - now for WordPress
 Author: Scott Lesovic
-Version: 0.1.3
+Version: 0.1.5
 Author URI: http://www.scottlesovic.com
 */
 
@@ -14,6 +14,7 @@ include_once('includes/amazing-system.php');
 add_action( 'init', 'MagicAmazingSystemPlugin::register_shortcodes' );
 add_action( 'admin_menu', 'MagicAmazingSystemPlugin::create_admin_menu' );
 add_filter( 'plugin_action_links', 'MagicAmazingSystemPlugin::add_plugin_settings_link', 10, 2 );
+//add_action( 'add_meta_boxes', 'MagicAmazingSystemPlugin::create_meta_box' );
 
 /**
 * Register custom upgrades (non-WordPress hosted plugins)

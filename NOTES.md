@@ -1,7 +1,7 @@
 ##############
 # Shortcodes #
 ##############
-
+```
 [merge]|[as]
   field|what
 	default
@@ -37,13 +37,13 @@
 	nofollow
 
 [click_track_submit]
-
+```
 
 
 #############
 # Post Meta #
 #############
-
+```
 Include jQuery
 Include DatePicker
 	theme
@@ -66,21 +66,25 @@ Include Highlighter
 Custom CSS
 Custom Form HTML
 Custom JavaScript
+```
 
 ###########
 # Options #
 ###########
+```
 System
 	version
 
 User
 	shortcode prefix
 	Merchant ID
+```
 
 
 #####################
 # Click Custom Post #
 #####################
+```
 Meta
 	Merchant ID
 	Tracking Field
@@ -98,4 +102,5 @@ Function
 
 Notes
 	if is_admin() - display example URL for including in link
+```
 

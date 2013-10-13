@@ -1,9 +1,9 @@
 === Amazing System ===
 Requires at least: 3.2
-Tested up to: 3.5
-Stable tag: 0.2.0
+Tested up to: 3.6.1
+Stable tag: 0.3.0
 
-Amazing System 3.0 (That thing from Dave Farr) - now for WordPress
+Amazing System 5.0 (That thing from Dave Farr) - now for WordPress
 
 == Description ==
 

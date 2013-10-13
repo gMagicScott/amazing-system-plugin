@@ -2,12 +2,14 @@
 /*
 Plugin Name: Amazing System
 Plugin URI: http://www.amazingsystemtraining.com
-Description: Amazing System 3.0 (That thing from Dave Farr) - now for WordPress
+Description: Amazing System 5.0 (That thing from Dave Farr) - now for WordPress
 Author: Scott Lesovic
-Version: 0.2.0
+Version: 0.3.0
 Author URI: http://www.scottlesovic.com
 */
 
+define('AMAZINGSYSTEM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define('AMAZINGSYSTEM_TINYMCE_JS', plugins_url( 'js/tinymce-button.js', __FILE__ ) );
 
 include_once('includes/amazing-system.php');
 

@@ -9,6 +9,10 @@
 require_once 'shortcode-switch.php';
 require_once 'shortcode-get-current-version.php';
 
+if ( is_admin() ) {
+	require AMAZINGSYSTEM_PLUGIN_DIR . 'includes/tinymce-button.php';
+}
+
 class MagicAmazingSystemPlugin {
 
 	public static $javascript = '';
@@ -240,6 +244,11 @@ class MagicAmazingSystemPlugin {
 
 			return $content;
 
+		}
+
+		if ( is_plugin_active( 'kswp_pop_wizard/kswp_pop_wizard.php' ) ) {
+			global $kswp_pop_wizard_var;
+			$as_form_html_value = $kswp_pop_wizard_var->kswp_pop_wizard_tooltip_html_js( $as_form_html_value );
 		}
 
 		

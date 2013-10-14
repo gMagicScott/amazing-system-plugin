@@ -246,6 +246,17 @@ class MagicAmazingSystemPlugin {
 
 		}
 
+		/**
+		 * WordPress function `is_plugin_active` only in "admin" area
+		 *
+		 * To do this test on the front end (as we are in this short code)
+		 * we have to make sure the file containing the function is loaded.
+		 *
+		 * GitHub: Issue #4
+		 */
+		if ( !function_exists( 'is_plugin_active' ) ) {
+			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
 		if ( is_plugin_active( 'kswp_pop_wizard/kswp_pop_wizard.php' ) ) {
 			global $kswp_pop_wizard_var;
 			$as_form_html_value = $kswp_pop_wizard_var->kswp_pop_wizard_tooltip_html_js( $as_form_html_value );

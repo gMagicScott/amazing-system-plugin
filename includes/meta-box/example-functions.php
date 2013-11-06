@@ -36,7 +36,7 @@ function cmb_sample_metaboxes( array $meta_boxes ) {
 			),
 			array(
 				'name' => 'Form HTML',
-				'desc' => 'Add all Amazing System form code here. Add this shortcode: <code>[show_as_form]</code> into the main post content where you want the form to appear.<br /><small><stong>NOTE:</strong> the html tag <code>&lt;textarea&gt;&lt;/textarea&gt;</code> causes problems. Please use <code>[textarea][/textarea]</code> instead.</small>',
+				'desc' => 'Add all Amazing System form code here. Add this shortcode: <code>[show_as_form]</code> into the main post content where you want the form to appear.',
 				'id'   => $prefix . 'the_form',
 				'type' => 'textarea_code',
 			),

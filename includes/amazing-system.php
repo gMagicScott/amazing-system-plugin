@@ -263,7 +263,7 @@ class MagicAmazingSystemPlugin {
 	* Prints the admininstration page for plugin.
 	*/
 	public static function get_admin_page()	{
-		if ( !empty($_POST) && check_admin_referer('amazing_system_options_update','amazing_system_admin_nonce') )		{
+		if ( !empty($_POST) && check_admin_referer('amazing_system_options_update','amazing_system_admin_nonce') && current_user_can('manage_options') )		{
 			update_option( self::option_key, stripslashes( $_POST['shortcode_name'] ) );
 			$msg = '<div class="updated"><p>Your settings have been <strong>updated</strong></p></div>';
 		}

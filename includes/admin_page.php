@@ -1,10 +1,16 @@
+<?php
+// Check that the user is allowed to update options
+if (!current_user_can('manage_options')) {
+    wp_die('You do not have sufficient permissions to access this page.');
+}
+?>
 <div class="wrap">
 
 	<?php screen_icon(); ?>
+	<h2>Amazing System Administration</h2>
 
-	<h2>Amazing System Administraiton</h2>
 
-	
+
 
 	<?php if ( isset( $msg ) ) {
 
@@ -12,7 +18,7 @@
 
 		} ?>
 
-	
+
 
 	<form action="" method="post" id="amazing_system_form">
 

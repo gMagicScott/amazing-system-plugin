@@ -50,7 +50,7 @@ function gill_check_activation() {
 	wp_schedule_event(time(), 'twicedaily', 'gill_check_event');
 }
 if ( !wp_next_scheduled('gill_check_event') && !defined('WP_INSTALLING') ) {
-				wp_schedule_event(time(), $scheduleName, 'gill_check_event');
+				wp_schedule_event(time(), 'twicedaily', 'gill_check_event');
 			}
 
 function gill_check_update() {

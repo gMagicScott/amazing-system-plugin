@@ -282,7 +282,7 @@ class MagicAmazingSystemPlugin {
 	*/
 	public static function add_plugin_settings_link($links, $file) {
 		if ( $file == 'amazing-system/index.php' ) {
-			$settings_link = sprintf ( '<a href="%s">%s</a>', admin_url ( 'options-general.php?page='.self::admin_menu_slug ), 'Settings' );
+			$settings_link = sprintf ( '<a href="%s">%s</a>', admin_url ( 'admin.php?page='.self::admin_menu_slug ), 'Settings' );
 			array_unshift ( $links, $settings_link );
 		}
 		return $links;

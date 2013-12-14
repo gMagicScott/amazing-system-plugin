@@ -4,6 +4,7 @@
 **/
 
 require_once 'shortcode-switch.php';
+require_once 'shortcode-block.php';
 require_once 'shortcode-get-current-version.php';
 
 if ( is_admin() ) {
@@ -328,5 +329,7 @@ EOF;
 
 add_filter('the_content', 'MagicAmazingSystemPlugin::stop_html_filter', 9);
 add_filter('the_content', 'MagicAmazingSystemPlugin::add_javascript_to_footer', 9);
+
+add_action( 'init', array( 'Amazing_System_Shortcode_Block', 'get_instance' ) );
 
 require_once( 'meta-box/example-functions.php' );

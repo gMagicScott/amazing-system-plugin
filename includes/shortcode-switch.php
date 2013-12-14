@@ -1,13 +1,13 @@
 <?php
 
 function as_switch_shortcode_cb ( $atts, $content = null ) {
-	
+
 	extract( shortcode_atts( array(
 		'default' => '',
 		'field' => ''
 		), $atts ) );
 	// Now $default and $field are available.
-	
+
 	/**
 	 * Exit early if "field" isn't defined.
 	 */
@@ -23,7 +23,7 @@ function as_switch_shortcode_cb ( $atts, $content = null ) {
 	$return  = $default;
 
 	$request = MagicAmazingSystemPlugin::$request;
-	
+
 	foreach ($atts as $key => $value) {
 
 		if ( 'default' == $key || 'field' == $key ) {
@@ -37,7 +37,7 @@ function as_switch_shortcode_cb ( $atts, $content = null ) {
 
 	foreach ($atts as $key => $value) {
 
-		if ( isset( $request[$field] ) && $request[$field] == $key ) {
+		if ( isset( $request[$field] ) && strtolower( $request[$field] ) === $key ) {
 			$return = $value;
 			return $return;
 		}

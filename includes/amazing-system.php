@@ -51,43 +51,28 @@ class MagicAmazingSystemPlugin {
 		/**
 		* Returns the content of a $_GET or $_POST or $_SESSION variable, referenced via shortcode, e.g. put the
 		* following in the content of a post or page:
-		*     [as what="Name" default="default value" force="get/post"]
+		*     [as what="Name" default="default value"]
 		*/
 		public static function display_get_post_vars( $atts ) {
 			$firstname = '';
 			$lastname = '';
 			extract( shortcode_atts( array(
-											'what' => 'Name',
-											'default' => '',
-											), $atts ) ) ;
-
-			/*if ( !isset( $_REQUEST['Name'] ) && isset( $_SESSION['Name'] ) ) {
-				$_REQUEST['Name'] = $_SESSION['Name'];
-				}*/
+				'what' => 'Name',
+				'default' => '',
+				), $atts ) ) ;
 
 			$request = array();
 			$request = self::$request;
 
-			if ( $what == 'firstname' ) {
-					if ( isset( $request['Name'] )) {
-						list($firstname, $lastname) = explode(' ', $request['Name'], 2);
-						return trim($firstname);
-					}
-					/*if ( isset( $_GET['Name'] )) {
-						list($firstname, $lastname) = explode(' ', $_GET['Name'], 2);
-						return trim($firstname);
-					}*/
-			} else if ( $what === 'lastname' ) {
-				list($firstname, $lastname) = explode(' ', $request['Name'], 2);
-				return trim($lastname);
-			}
-			if ( isset( $request[$what] )) {
+			if ( $what == 'firstname' && isset( $request['Name'] ) && !empty( $request['Name'] ) ) {
+				list( $firstname, $lastname ) = ( preg_match( '/ ./', $request['Name']) ) ? explode(' ', $request['Name'], 2) : array( $request['Name'], $default );
+				return trim( $firstname );
+			} else if ( $what === 'lastname' && isset( $request['Name'] ) && !empty( $request['Name'] ) ) {
+				list( $firstname, $lastname ) = ( preg_match( '/ ./', $request['Name']) ) ? explode(' ', $request['Name'], 2) : array( $request['Name'], $default );
+				return trim( $lastname );
+			} else if ( isset( $request[$what] ) && !empty( $request[$what] ) ) {
 				$value = $request[$what];
-			} /*else if (isset( $_GET[$what])) {
-				$value = $_GET[$what];
-			} else if (isset( $_SESSION[$what])) {
-				$value = $_SESSION[$what];
-			} */else {
+			} else {
 				$value = $default;
 			}
 

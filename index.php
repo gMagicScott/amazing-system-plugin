@@ -4,7 +4,7 @@ Plugin Name: Amazing System
 Plugin URI: http://www.amazingsystemtraining.com
 Description: Amazing System 5.0 (That thing from Dave Farr) - now for WordPress
 Author: Scott Lesovic
-Version: 0.3.1
+Version: 0.4.0
 Author URI: http://www.scottlesovic.com
 */
 

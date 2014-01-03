@@ -36,8 +36,13 @@ function as_switch_shortcode_cb ( $atts, $content = null ) {
 	}
 
 	foreach ($atts as $key => $value) {
+		if ( 0 === $key ) {
+			$key_strval = '0';
+		} else {
+			$key_strval = strval( $key );
+		}
 
-		if ( isset( $request[$field] ) && strtolower( $request[$field] ) === $key ) {
+		if ( isset( $request[$field] ) && strtolower( $request[$field] ) === $key_strval ) {
 			$return = $value;
 			return $return;
 		}

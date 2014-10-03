@@ -23,16 +23,16 @@ function cmb_sample_metaboxes( array $meta_boxes ) {
 	$meta_boxes[] = array(
 		'id'         => 'amazing_system',
 		'title'      => 'Amazing System',
-		'pages'      => array( 'page'), // Post type
+		'pages'      => array( 'page' ), // Post type
 		'context'    => 'normal',
 		'priority'   => 'high',
 		'show_names' => true, // Show field names on the left
 		'fields'     => array(
 			array(
-				'name' => 'Disable HTML Filter',
-				'desc' => '&nbsp;&nbsp;Prevent WordPress from modifying HTML inside the post.',
-				'id'   => $prefix . 'filter_html',
-				'type' => 'checkbox',
+				'name' => 'Email Merge Link',
+				'desc' => __( 'Use this link in your 1ShoppingCart autoresponder messages to merge in all the fields you&apos;ve used on this page.', 'amazing-system' ),
+				'id' => $prefix . '1Shop_Link',
+				'type' => 'text_disabled'
 			),
 			array(
 				'name' => 'Form HTML',
@@ -40,24 +40,36 @@ function cmb_sample_metaboxes( array $meta_boxes ) {
 				'id'   => $prefix . 'the_form',
 				'type' => 'textarea_code',
 			),
-			/* array(
-				'name' => 'Include these scripts (in development, feature not functional)',
-				'desc' => 'This is a test section, it is not fully functional yet.',
+			array(
+				'name' => 'Amazing System Scripts',
+				'desc' => 'More of the standard Amazing System scripts will be coming soon.',
 				'id' => $prefix . 'test_multicheckbox',
 				'type' => 'multicheck',
 				'options' => array(
-					'check1' => 'Capitalization',
-					'check2' => 'Validator',
-					'check3' => 'Row Highlighter (You\'re theme needs to have support for this to do anything)',
-					'check4' =>	'Boy/girl/multi changer',
+					// 'amsys-title-case' => 'Capitalization',
+					'amsys-gen4-validator' => 'JavaScript Form Validator'
+					// 'jquery-datepicker' => 'Date Picker',
 				)
-			), */
+			),
+			// array(
+			// 	'name' => 'Capitalization Fields',
+			// 	'desc' => 'What fields should be autocapitalized?',
+			// 	'id' => $prefix . 'test_multicheckbox_cap',
+			// 	'type' => 'multiselect_js',
+      //   'row_class' => 'amsys_cap_settings'
+			// ),
 			array(
 				'name' => 'Add extra JavaScript',
 				'desc' => 'Add JavaScript to this page in the footer (perfect for validation). This will be wrapped in <code>&lt;script&gt;</code> tags and CDATA tags.',
 				'id'   => $prefix . 'extra_js',
 				'type' => 'textarea_code',
 			),
+			array(
+				'name' => 'Disable HTML Filter',
+				'desc' => '&nbsp;&nbsp;Prevent WordPress from modifying HTML inside the post.',
+				'id'   => $prefix . 'filter_html',
+				'type' => 'checkbox',
+			)
 		),
 	);
 

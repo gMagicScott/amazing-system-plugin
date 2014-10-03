@@ -3,18 +3,22 @@
 * Amazing System
 **/
 
-require_once 'shortcode-switch.php';
-require_once 'shortcode-block.php';
-require_once 'shortcode-get-current-version.php';
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+require_once( AMSYS_PLUGIN_PATH . 'includes/shortcode-switch.php' );
+require_once( AMSYS_PLUGIN_PATH . 'includes/shortcode-block.php' );
+require_once( AMSYS_PLUGIN_PATH . 'includes/shortcode-get-current-version.php' );
 
 if ( is_admin() ) {
-	require AMAZINGSYSTEM_PLUGIN_DIR . 'includes/tinymce-button.php';
+	require AMSYS_PLUGIN_PATH . 'includes/tinymce-button.php';
 }
 
 class MagicAmazingSystemPlugin {
 
 	public static $javascript = '';
 	public static $request = array();
+	public static $blog_charset = '';
 
 	/**
 	* Define Class Constants
@@ -26,22 +30,52 @@ class MagicAmazingSystemPlugin {
 	 * Save Get/Post/Session to class var for later use
 	 */
 	public static function save_request_vars() {
-		if ( isset($_GET) ) {
-			$get = $_GET;
-			self::$request = array_merge( self::$request, $get );
+		static $charset = 'ASCII, UTF-8, ISO-8859-1, JIS, EUC-JP, SJIS';
+
+		self::$blog_charset = get_option( 'blog_charset' );
+
+		$data = array();
+		$data = isset( $_GET ) ? array_merge( $data, $_GET ) : $data;
+		$data = isset( $_POST ) ? array_merge( $data, $_POST ) : $data;
+
+		$clean_data = array();
+
+		foreach ( $data as $key => $value ) {
+			$clean_data[ $key ] = self::convert_encoding_deep(
+				$value,
+				self::$blog_charset,
+				$charset
+				);
 		}
-		if ( isset($_POST) ) {
-			$post = $_POST;
-			self::$request = array_merge( self::$request, $post );
+
+		self::$request = stripslashes_deep( $clean_data );
+	}
+
+	public static function convert_encoding_deep( $value, $blog_charset = false, $charset = 'ASCII, UTF-8, ISO-8859-1, JIS, EUC-JP, SJIS' )	{
+		if ( false === $blog_charset ) {
+			$blog_charset = self::$blog_charset;
 		}
+		if ( is_array( $value ) ) {
+			$value = array_map( 'MagicAmazingSystemPlugin::convert_encoding_deep', $value );
+		} elseif ( is_string( $value ) ) {
+			$value = mb_convert_encoding(
+				$value,
+				$blog_charset,
+				$charset
+				);
+		}
+
+		return $value;
 	}
 
 		/**
 		* Register used shortcodes
 		*/
 		public static function register_shortcodes()	{
-		$shortcode = get_option(self::option_key, self::default_shortcode_name);
-			add_shortcode ( $shortcode, 'MagicAmazingSystemPlugin::display_get_post_vars' );
+			$settings = get_option( 'amsys_settings' );
+			$basic_merge_shortcode = $settings['basic_merge_shortcode'] ? $settings['basic_merge_shortcode'] : 'as';
+
+			add_shortcode ( $basic_merge_shortcode, 'MagicAmazingSystemPlugin::display_get_post_vars' );
 			add_shortcode ( 'gender', 'MagicAmazingSystemPlugin::as_shortcode_gender_cb' );
 			add_shortcode ( 'show_as_form', 'MagicAmazingSystemPlugin::show_as_form_cb' );
 			add_shortcode ( 'textarea', 'MagicAmazingSystemPlugin::textarea_cb');
@@ -62,12 +96,15 @@ class MagicAmazingSystemPlugin {
 				'default' => '',
 				), $atts ) ) ;
 
-			$request = array();
 			$request = self::$request;
 
 			if ( $what == 'firstname' && isset( $request['Name'] ) && !empty( $request['Name'] ) ) {
 				list( $firstname, $lastname ) = ( preg_match( '/ ./', $request['Name']) ) ? explode(' ', $request['Name'], 2) : array( $request['Name'], $default );
 				return trim( $firstname );
+			} else if ( $what == 'firstname' && isset( $request['mc-firstname'] ) && !empty( $request['mc-firstname'] ) ) {
+				return trim( $request['mc-firstname'] );
+			} else if ( $what == 'lastname' && isset( $request['mc-lastname'] ) && !empty( $request['mc-lastname'] ) ) {
+				return trim( $request['mc-lastname'] );
 			} else if ( $what === 'lastname' && isset( $request['Name'] ) && !empty( $request['Name'] ) ) {
 				list( $firstname, $lastname ) = ( preg_match( '/ ./', $request['Name']) ) ? explode(' ', $request['Name'], 2) : array( $request['Name'], $default );
 				return trim( $lastname );
@@ -225,7 +262,7 @@ class MagicAmazingSystemPlugin {
 			} // End foreach
 		} // End If
 
-		$return = '<textarea' . $atts_string . '>' . do_shortcode( $content ) . '</textarea>';
+		$return = '<textarea' . $atts_string . '>' . esc_textarea( do_shortcode( $content ) ) . '</textarea>';
 		return $return;
 	}
 
@@ -237,7 +274,7 @@ class MagicAmazingSystemPlugin {
 	*/
 	public static function create_admin_menu() {
 			add_menu_page(
-				'Amazing System',		// page title
+				'Amazing System Administration',		// page title
 				'Amazing System',		// menu title
 				'manage_options',		// capability
 				self::admin_menu_slug,	// menu slug
@@ -249,13 +286,20 @@ class MagicAmazingSystemPlugin {
 	* Prints the admininstration page for plugin.
 	*/
 	public static function get_admin_page()	{
+		$settings = get_option( 'amsys_settings' );
+
 		if ( !empty($_POST) && check_admin_referer('amazing_system_options_update','amazing_system_admin_nonce') && current_user_can('manage_options') )		{
-			update_option( self::option_key, stripslashes( $_POST['shortcode_name'] ) );
+			$settings['basic_merge_shortcode'] = stripslashes($_POST['shortcode_name']);
+			$settings['1shop_fields'] = stripslashes_deep( $_POST['merge_fields'] );
+			update_option( 'amsys_settings', $settings );
 			$msg = '<div class="updated"><p>Your settings have been <strong>updated</strong></p></div>';
 		}
 
-		$shortcode_name = esc_attr( get_option(self::option_key,self::default_shortcode_name) );
-		include('admin_page.php');
+		$basic_merge_shortcode = $settings['basic_merge_shortcode'] ? $settings['basic_merge_shortcode'] : 'as';
+
+		$shortcode_name = esc_attr( $basic_merge_shortcode );
+		unset($basic_merge_shortcode);
+		include( AMAZINGSYSTEM_PLUGIN_DIR . 'includes/admin_page.php' );
 	}
 
 	/**
@@ -267,7 +311,7 @@ class MagicAmazingSystemPlugin {
 	* @return	array	The $links hash.
 	*/
 	public static function add_plugin_settings_link($links, $file) {
-		if ( $file == 'amazing-system/index.php' ) {
+		if ( $file == 'amazing-system/amazing-system.php' ) {
 			$settings_link = sprintf ( '<a href="%s">%s</a>', admin_url ( 'admin.php?page='.self::admin_menu_slug ), 'Settings' );
 			array_unshift ( $links, $settings_link );
 		}
@@ -294,14 +338,13 @@ class MagicAmazingSystemPlugin {
 			remove_filter('the_excerpt', 'wpautop');
 			remove_filter('the_content', 'wptexturize');
 			remove_filter('the_excerpt', 'wptexturize');
-			// $success = "We have stopped wpautop!\n";
-			// $content = $success . $content;
 		}
 		return $content;
 	}
 
 	public static function add_javascript_to_footer($content) {
 		global $post;
+
 		$as_extra_js_value = get_post_meta( $post->ID, '_as_extra_js', true);
 		$as_extra_js_value = do_shortcode( $as_extra_js_value );
 
@@ -311,14 +354,14 @@ class MagicAmazingSystemPlugin {
 
 		$javascript = <<<EOF
 		<script type="text/javascript">
-		// <![CDATA[
+		/* <![CDATA[ */
 		$as_extra_js_value
-		// ]]>
+		/* ]]> */
 		</script>
 EOF;
 
 		self::$javascript = $javascript;
-		add_action('wp_footer', 'MagicAmazingSystemPlugin::js_footer_callback');
+		add_action('wp_footer', 'MagicAmazingSystemPlugin::js_footer_callback', 20 );
 		return $content;
 	}
 
@@ -327,9 +370,27 @@ EOF;
 	}
 }
 
+add_action( 'wp_enqueue_scripts', 'amsys_maybe_enqueue_validator' );
+function amsys_maybe_enqueue_validator () {
+	global $post;
+
+	wp_register_script( 'amsys-gen4-validator', plugins_url( 'js/gen_validatorv4.js', AMSYS_PLUGIN_FILE ), array(), '4.0', true );
+
+	if ( is_singular() ) {
+		$scripts = get_post_meta( $post->ID, '_as_test_multicheckbox', false );
+
+		foreach ($scripts as $script) {
+			if ( wp_script_is( $script, 'registered' ) ) {
+				wp_enqueue_script( $script );
+			}
+		}
+	}
+}
+
+
 add_filter('the_content', 'MagicAmazingSystemPlugin::stop_html_filter', 9);
 add_filter('the_content', 'MagicAmazingSystemPlugin::add_javascript_to_footer', 9);
 
-add_action( 'init', array( 'Amazing_System_Shortcode_Block', 'get_instance' ) );
+add_action( 'init', array( 'AmSys_Shortcode_Block', 'get_instance' ) );
 
-require_once( 'meta-box/example-functions.php' );
+require_once( AMSYS_PLUGIN_PATH . 'includes/meta-box/example-functions.php' );

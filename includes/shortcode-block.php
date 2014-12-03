@@ -46,22 +46,22 @@ class AmSys_Shortcode_Block {
 	 */
 	public function fire( array $atts, $content = null )  {
 
-    $atts = shortcode_atts(
-      array(
-        'field'    => false,
-        'value'    => false,
-        'operator' => 'eq'
-      ),
-      $atts,
-      self::$tag  // WP 3.6 shortcode_atts_{$shortcode} filter
-    );
+		$atts = shortcode_atts(
+			array(
+				'field'    => false,
+				'value'    => false,
+				'operator' => 'eq'
+			),
+			$atts,
+			self::$tag  // WP 3.6 shortcode_atts_{$shortcode} filter
+		);
 
 		// Thou shall not `extract()`
-    $field    = $atts[ 'field' ];
-    $value    = $atts[ 'value' ];
-    $operator = $atts[ 'operator' ];
+		$field    = $atts[ 'field' ];
+		$value    = $atts[ 'value' ];
+		$operator = $atts[ 'operator' ];
 
-    if ( false === $field ) {
+		if ( false === $field ) {
 			return;
 		}
 
@@ -98,9 +98,9 @@ class AmSys_Shortcode_Block {
 			case 'ends with':
 				$display = $this->string_ends_with( $value, $data );
 				break;
-      case 'empty':
-        $display = ( isset( $this->data[ $field ] ) && empty( $this->data[ $field ] ) ) ? true : false;
-        break;
+			case 'empty':
+				$display = ( isset( $this->data[ $field ] ) && empty( $this->data[ $field ] ) ) ? true : false;
+				break;
 		}
 
 		if ( true === $display ) {

@@ -134,6 +134,8 @@ function amsys_get_1shop_code( $field ) {
 			break;
 
 		case 'Email1':
+			return '%$email$%';
+			break;
 		case 'Company':
 		case 'Homephone':
 		case 'Workphone':

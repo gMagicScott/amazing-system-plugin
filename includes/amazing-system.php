@@ -57,7 +57,7 @@ class MagicAmazingSystemPlugin {
 		}
 		if ( is_array( $value ) ) {
 			$value = array_map( 'MagicAmazingSystemPlugin::convert_encoding_deep', $value );
-		} elseif ( is_string( $value ) ) {
+		} elseif ( is_string( $value ) && function_exists( 'mb_convert_encoding' ) ) {
 			$value = mb_convert_encoding(
 				$value,
 				$blog_charset,

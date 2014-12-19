@@ -168,7 +168,21 @@ class MagicAmazingSystemPlugin {
 		 * @param  string $default Value to use if unable to retrieve last name
 		 * @return string          The value to replace the shortcode tag
 		 */
-		private static function get_lastname( $default ) {}
+		private static function get_lastname( $default ) {
+				if ( isset( self::$request[ 'mc-lastname' ] ) && !empty( self::$request[ 'mc-lastname' ] ) ) {
+					return trim( self::$request[ 'mc-lastname' ] );
+				}
+
+				if ( isset( self::$request[ 'Name' ] ) && !empty( self::$request[ 'Name' ] ) ) {
+					$name_array = explode( ' ', self::$request[ 'Name' ], 2 );
+					if ( 2 > count( $name_array ) ) {
+						return $default;
+					}
+					return trim( $name_array[1] );
+				}
+
+				return $default;
+		}
 
 	/**
 	 * TODO: change 'req' to pull from an option

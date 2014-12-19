@@ -129,7 +129,15 @@ class MagicAmazingSystemPlugin {
 		 * @param  string $default Value to use if unable to retrieve full name
 		 * @return string          The value to replace the shortcode tag
 		 */
-		private static function get_full_name( $default ) {}
+		private static function get_full_name( $default ) {
+			if ( self::get_firstname( false ) && self::get_lastname( false ) ) {
+				return self::get_firstname( '' ) . ' ' . self::get_lastname( '' );
+			} elseif ( self::get_firstname( false ) ) {
+				return self::get_firstname( '' );
+			}
+
+			return $default;
+		}
 
 		/**
 		 * Get client's first name

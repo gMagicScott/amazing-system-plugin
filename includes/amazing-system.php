@@ -75,7 +75,7 @@ class MagicAmazingSystemPlugin {
 			$settings = get_option( 'amsys_settings' );
 			$basic_merge_shortcode = $settings['basic_merge_shortcode'] ? $settings['basic_merge_shortcode'] : 'as';
 
-			add_shortcode ( $basic_merge_shortcode, 'MagicAmazingSystemPlugin::display_get_post_vars' );
+			add_shortcode ( $basic_merge_shortcode, 'MagicAmazingSystemPlugin::shortcode_merge_handler' );
 			add_shortcode ( 'gender', 'MagicAmazingSystemPlugin::as_shortcode_gender_cb' );
 			add_shortcode ( 'show_as_form', 'MagicAmazingSystemPlugin::show_as_form_cb' );
 			add_shortcode ( 'textarea', 'MagicAmazingSystemPlugin::textarea_cb');
@@ -88,7 +88,7 @@ class MagicAmazingSystemPlugin {
 		* following in the content of a post or page:
 		*     [as what="Name" default="default value"]
 		*/
-		public static function display_get_post_vars( $atts ) {
+		public static function shortcode_merge_handler( $atts ) {
 			$firstname = '';
 			$lastname = '';
 			extract( shortcode_atts( array(

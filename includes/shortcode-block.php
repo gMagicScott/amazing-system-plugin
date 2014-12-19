@@ -89,6 +89,7 @@ class AmSys_Shortcode_Block {
 				break;
 			case 'one of':
 				$display = $this->is_one_of( $value, $data );
+				break;
 			case 'contains':
 				$display = ( strpos( $data, $value ) ) ? true : false;
 				break;

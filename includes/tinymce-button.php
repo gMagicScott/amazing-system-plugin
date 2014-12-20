@@ -77,9 +77,23 @@ function amsys_link_generator ( $post ) {
 		do_shortcode( $the_extra_js );
 
 		foreach ($amsys_shortcode_fields as $key => $value ) {
-			if ( 'firstname' === $value || 'mc-firstname' === $value || 'lastname' === $value || 'mc-lastname' === $value ) {
-				$amsys_shortcode_fields[] = 'Name';
+			if ( 'Name' === $value ) {
+				$amsys_shortcode_fields[] = 'mc-firstname';
+				$amsys_shortcode_fields[] = 'mc-lastname';
 				unset( $amsys_shortcode_fields[ $key ] );
+				continue;
+			}
+
+			if ( 'firstname' === $value ) {
+				$amsys_shortcode_fields[] = 'mc-firstname';
+				unset( $amsys_shortcode_fields[ $key ] );
+				continue;
+			}
+
+			if ( 'lastname' === $value ) {
+				$amsys_shortcode_fields[] = 'mc-lastname';
+				unset( $amsys_shortcode_fields[ $key ] );
+				continue;
 			}
 		}
 		$amsys_shortcode_fields = array_unique( $amsys_shortcode_fields);
@@ -127,18 +141,25 @@ function amsys_shortcode_link_builder( $atts, $content = null ) {
 function amsys_get_1shop_code( $field ) {
 	switch ($field) {
 
-		case 'Name':
-		case 'firstname':
-		case 'lastname':
-			return '%$Name$%';
-			break;
-
 		case 'Email1':
 			return '%$email$%';
 			break;
-		case 'Company':
 		case 'Homephone':
+			return '%$secondaryphone$%';
+			break;
 		case 'Workphone':
+			return '%$phone$%';
+			break;
+		case 'firstname':
+		case 'mc-firstname':
+			return '%$firstname$%';
+			break;
+		case 'lastname':
+		case 'mc-lastname':
+			return '%$lastname$%';
+			break;
+		case 'Name':
+		case 'Company':
 		case 'Fax':
 		case 'Address1':
 		case 'Address2':
@@ -146,7 +167,7 @@ function amsys_get_1shop_code( $field ) {
 		case 'State':
 		case 'Zip':
 		case 'Country':
-			return '%$' . $field . '$%';
+			return '%$' . strtolower( $field ) . '$%';
 			break;
 
 		default:

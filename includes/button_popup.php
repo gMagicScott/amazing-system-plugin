@@ -140,7 +140,7 @@ header("X-Robots-Tag: none");
 	<script type="text/javascript">
 		mergeFields = tinyMCEPopup.getWin().amsys_tinymce_data.merge_fields;
 
-		selectOptions = '<option value="firstname">First Name</option>';
+		selectOptions = '<option value="firstname">First Name</option><option value="lastname">Last Name</option>';
 
 		for (var i = 1; i < 13; i++) {
 			field = 'default-' + i.toString();

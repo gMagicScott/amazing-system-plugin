@@ -75,7 +75,7 @@ class MagicAmazingSystemPlugin {
 			$settings = get_option( 'amsys_settings' );
 			$basic_merge_shortcode = $settings['basic_merge_shortcode'] ? $settings['basic_merge_shortcode'] : 'as';
 
-			add_shortcode ( $basic_merge_shortcode, 'MagicAmazingSystemPlugin::display_get_post_vars' );
+			add_shortcode ( $basic_merge_shortcode, 'MagicAmazingSystemPlugin::shortcode_merge_handler' );
 			add_shortcode ( 'gender', 'MagicAmazingSystemPlugin::as_shortcode_gender_cb' );
 			add_shortcode ( 'show_as_form', 'MagicAmazingSystemPlugin::show_as_form_cb' );
 			add_shortcode ( 'textarea', 'MagicAmazingSystemPlugin::textarea_cb');
@@ -88,33 +88,100 @@ class MagicAmazingSystemPlugin {
 		* following in the content of a post or page:
 		*     [as what="Name" default="default value"]
 		*/
-		public static function display_get_post_vars( $atts ) {
-			$firstname = '';
-			$lastname = '';
-			extract( shortcode_atts( array(
+		public static function shortcode_merge_handler( $atts ) {
+			$default_atts = array(
 				'what' => 'Name',
-				'default' => '',
-				), $atts ) ) ;
+				'default' => ''
+				);
 
-			$request = self::$request;
+			$settings = get_option( 'amsys_settings' );
+			$shortcode_tag = $settings['basic_merge_shortcode'] ? $settings['basic_merge_shortcode'] : 'as';
 
-			if ( $what == 'firstname' && isset( $request['Name'] ) && !empty( $request['Name'] ) ) {
-				list( $firstname, $lastname ) = ( preg_match( '/ ./', $request['Name']) ) ? explode(' ', $request['Name'], 2) : array( $request['Name'], $default );
-				return trim( $firstname );
-			} else if ( $what == 'firstname' && isset( $request['mc-firstname'] ) && !empty( $request['mc-firstname'] ) ) {
-				return trim( $request['mc-firstname'] );
-			} else if ( $what == 'lastname' && isset( $request['mc-lastname'] ) && !empty( $request['mc-lastname'] ) ) {
-				return trim( $request['mc-lastname'] );
-			} else if ( $what === 'lastname' && isset( $request['Name'] ) && !empty( $request['Name'] ) ) {
-				list( $firstname, $lastname ) = ( preg_match( '/ ./', $request['Name']) ) ? explode(' ', $request['Name'], 2) : array( $request['Name'], $default );
-				return trim( $lastname );
-			} else if ( isset( $request[$what] ) && !empty( $request[$what] ) ) {
-				$value = $request[$what];
-			} else {
-				$value = $default;
+			$atts = shortcode_atts( $default_atts, $atts, $shortcode_tag );
+
+			$field = $atts[ 'what' ];
+			$default_value = $atts[ 'default' ];
+
+			if ( 'Name' == $field || 'name' == $field ) {
+				return self::get_full_name( $default_value );
 			}
 
-			return $value;
+			if ( 'firstname' == $field || 'mc-firstname' == $field ) {
+				return self::get_firstname( $default_value );
+			}
+
+			if ( 'lastname' == $field || 'mc-lastname' == $field ) {
+				return self::get_lastname( $default_value );
+			}
+
+			if ( isset( self::$request[ $field ] ) && !empty( self::$request[ $field ] ) ) {
+				return trim( self::$request[ $field ] );
+			}
+
+			return $default_value;
+		}
+
+		/**
+		 * Get client's full name
+		 *
+		 * Parse the request to build out the client's full name from avaliable fields.
+		 *
+		 * @param  string $default Value to use if unable to retrieve full name
+		 * @return string          The value to replace the shortcode tag
+		 */
+		private static function get_full_name( $default ) {
+			if ( self::get_firstname( false ) && self::get_lastname( false ) ) {
+				return self::get_firstname( '' ) . ' ' . self::get_lastname( '' );
+			} elseif ( self::get_firstname( false ) ) {
+				return self::get_firstname( '' );
+			}
+
+			return $default;
+		}
+
+		/**
+		 * Get client's first name
+		 *
+		 * Parse the request to build out the client's first name from avaliable fields.
+		 *
+		 * @param  string $default Value to use if unable to retrieve first name
+		 * @return string          The value to replace the shortcode tag
+		 */
+		private static function get_firstname( $default ) {
+			if ( isset( self::$request[ 'mc-firstname' ] ) && !empty( self::$request[ 'mc-firstname' ] ) ) {
+				return trim( self::$request[ 'mc-firstname' ] );
+			}
+
+			if ( isset( self::$request[ 'Name' ] ) && !empty( self::$request[ 'Name' ] ) ) {
+				$name_array = explode( ' ', self::$request[ 'Name' ] );
+				return trim( $name_array[0] );
+			}
+
+			return $default;
+		}
+
+		/**
+		 * Get client's last name
+		 *
+		 * Parse the request to build out the client's last name from avaliable fields.
+		 *
+		 * @param  string $default Value to use if unable to retrieve last name
+		 * @return string          The value to replace the shortcode tag
+		 */
+		private static function get_lastname( $default ) {
+				if ( isset( self::$request[ 'mc-lastname' ] ) && !empty( self::$request[ 'mc-lastname' ] ) ) {
+					return trim( self::$request[ 'mc-lastname' ] );
+				}
+
+				if ( isset( self::$request[ 'Name' ] ) && !empty( self::$request[ 'Name' ] ) ) {
+					$name_array = explode( ' ', self::$request[ 'Name' ], 2 );
+					if ( 2 > count( $name_array ) ) {
+						return $default;
+					}
+					return trim( $name_array[1] );
+				}
+
+				return $default;
 		}
 
 	/**

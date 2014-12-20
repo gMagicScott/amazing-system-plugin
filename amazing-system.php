@@ -12,7 +12,7 @@
  * Plugin Name:      Amazing System
  * Plugin URI:       http://amazingsystemtraining.com/as-wordpress-plugin/
  * Description:      If you haven&apos;t heard, back in 1999, magician David Farr created a powerful strategy using internet technology to book shows on his website. They call it the <strong>Amazing System</strong>. You should try it &mdash; its, you know, <em>amazing</em>&hellip;
- * Version:          0.4.2-beta.1
+ * Version:          0.5.0-rc.1
  * Author:           Scott Lesovic
  * Author URI:       http://scottlesovic.com
  * Text Domain:      amazing-system

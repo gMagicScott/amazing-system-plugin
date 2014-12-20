@@ -5,7 +5,7 @@
 // delete_option( 'amsys_settings' );
 if ( ! get_option( 'amsys_settings', false ) ) {
 	add_option( 'amsys_settings', array(
-		'_version' => '0.4.2-alpha.1',
+		'_version' => '0.5.0-rc.1',
 		'basic_merge_shortcode' => get_option( 'amazing_system_shortcode', 'as' ),
 		'1shop_fields' => array(
 			'default-1' => array(

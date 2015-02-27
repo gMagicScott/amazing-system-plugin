@@ -46,6 +46,13 @@ function as_switch_shortcode_cb ( $atts, $content = null ) {
 			$return = $value;
 			return $return;
 		}
+
+		if ( MagicAmazingSystemPlugin::is_a_default_1shop_field( $field ) ) {
+			$atts[ 'field' ] = strtolower( $field );
+			$atts[ 'default' ] = $default;
+			$return = as_switch_shortcode_cb( $atts );
+			continue;
+		}
 	}
 
 	return $return;

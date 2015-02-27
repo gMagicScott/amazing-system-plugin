@@ -138,7 +138,7 @@ class MagicAmazingSystemPlugin {
 		 * @param  string  $field The `$_REQUEST` field
 		 * @return boolean
 		 */
-		private static function is_a_default_1shop_field( $field ) {
+		public static function is_a_default_1shop_field( $field ) {
 
 			if ( $field === strtolower( $field ) ) {
 				return false;

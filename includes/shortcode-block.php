@@ -117,12 +117,16 @@ class AmSys_Shortcode_Block {
 	private function get_field( $key, $default = null) {
 		$data = $this->data;
 
-		if ( ! isset( $data[ $key ] ) || empty( $data[ $key ] ) ) {
+		if ( ! isset( $data[ $key ] ) && ! MagicAmazingSystemPlugin::is_a_default_1shop_field( $key ) ) {
 			return $default;
 		}
 
 		if ( isset( $data[ $key ] ) ) {
 			return $data[ $key ];
+		}
+
+		if ( MagicAmazingSystemPlugin::is_a_default_1shop_field( $key ) ) {
+			return $this->get_field( strtolower( $key ), $default );
 		}
 
 		return false;

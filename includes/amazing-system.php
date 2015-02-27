@@ -118,7 +118,49 @@ class MagicAmazingSystemPlugin {
 				return trim( self::$request[ $field ] );
 			}
 
+			if ( self::is_a_default_1shop_field( $field ) ) {
+				return self::shortcode_merge_handler( array(
+						'what' => strtolower( $field ),
+						'default' => $default_value
+					) );
+			}
+
 			return $default_value;
+		}
+
+		/**
+		 * Request field is a default 1ShoppingCart field
+		 *
+		 * 1SC in an update made all their standard fields lower case. We need
+		 * to check if we are working with one of these fields and standardize
+		 * the casing of the variable.
+		 *
+		 * @param  string  $field The `$_REQUEST` field
+		 * @return boolean
+		 */
+		private static function is_a_default_1shop_field( $field ) {
+
+			if ( $field === strtolower( $field ) ) {
+				return false;
+			}
+
+			$fields = array(
+				'email1',
+				'company',
+				'workphone',
+				'homephone',
+				'fax',
+				'address1',
+				'address2',
+				'city',
+				'state',
+				'zip',
+				'country'
+			);
+
+			$field = strtolower( $field );
+
+			return in_array( $field, $fields, true );
 		}
 
 		/**

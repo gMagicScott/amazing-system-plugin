@@ -35,6 +35,12 @@ function cmb_sample_metaboxes( array $meta_boxes ) {
 				'type' => 'text_disabled'
 			),
 			array(
+				'name' => 'Form Thank You URL',
+				'desc' => 'To use this page as a personalized "thank you page" for a web form, use this link as your "thank you URL" in your 1ShoppingCart web form configuration.',
+				'id' => $prefix. 'TY_URL',
+				'type' => 'text_disabled'
+			),
+			array(
 				'name' => 'Form HTML',
 				'desc' => 'Add all Amazing System form code here. Add this shortcode: <code>[show_as_form]</code> into the main post content where you want the form to appear.',
 				'id'   => $prefix . 'the_form',

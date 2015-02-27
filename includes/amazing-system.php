@@ -12,6 +12,7 @@ require_once( AMSYS_PLUGIN_PATH . 'includes/shortcode-get-current-version.php' )
 
 if ( is_admin() ) {
 	require AMSYS_PLUGIN_PATH . 'includes/tinymce-button.php';
+	require AMSYS_PLUGIN_PATH . 'includes/meta-thank-you.php';
 }
 
 class MagicAmazingSystemPlugin {

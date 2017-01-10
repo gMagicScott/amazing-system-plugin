@@ -3,6 +3,9 @@
 # Tell Travis CI we're using PHP
 language: php
 
+# Don't need `sudo` for anything
+sudo: false
+
 # Versions of PHP to test against
 php:
     - "5.2"
